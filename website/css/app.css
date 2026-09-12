@@ -15,7 +15,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   background: var(--ink);
   color: var(--ivory);
@@ -23,6 +23,7 @@ body {
   font-weight: 400;
   line-height: 1.7;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 img { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
@@ -47,7 +48,7 @@ label {
   margin-bottom: 7px;
 }
 .field { margin-bottom: 14px; }
-.wrap { width: min(1220px, calc(100% - 48px)); margin: 0 auto; }
+.wrap { width: min(1220px, calc(100% - 48px)); margin: 0 auto; max-width: 100%; }
 .gold { color: var(--clay); }
 .muted { color: var(--muted); }
 .kicker {
@@ -175,6 +176,7 @@ nav.staff-top .brand { justify-self: start; }
 
 .hero {
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   overflow: hidden;
   background: #10100e;
@@ -1180,36 +1182,145 @@ footer.site {
   to { transform: translateY(-3px); }
 }
 
+@media (max-width: 1100px) {
+  .dest-photo h3 { font-size: 32px; }
+  .book-place strong { font-size: 22px; }
+  .xp-main { width: min(40vw, 520px); height: min(40vw, 520px); }
+  .xp-panel { width: min(280px, 28vw); padding: 40px 28px; }
+}
+
 @media (max-width: 900px) {
-  nav.top { padding: 16px 18px; }
-  .hero-center { width: calc(100% - 28px); }
-  .hero h1 { letter-spacing: 0.08em; font-size: clamp(28px, 9vw, 48px); }
-  .hero-base { flex-direction: column; align-items: flex-start; padding: 0 20px 28px; }
-  .hero-note { text-align: left; }
+  .wrap { width: min(1220px, calc(100% - 32px)); }
+  nav.top {
+    padding: 14px 16px;
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  nav.top .brand { font-size: 16px; }
+  .nav-cta, .btn { padding: 10px 14px; letter-spacing: 0.12em; }
+  .hero { min-height: 100dvh; }
+  .hero-center { top: 40%; width: calc(100% - 28px); }
+  .welcome { letter-spacing: 0.28em; font-size: 10px; }
+  .hero h1 { letter-spacing: 0.06em; font-size: clamp(26px, 8vw, 44px); line-height: 1.05; }
+  .hero-rule { width: 100%; margin-top: 24px; gap: 12px; }
+  .hero-play { width: 50px; height: 50px; }
+  .hero-base {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 0 20px max(20px, env(safe-area-inset-bottom));
+  }
+  .hero-note { text-align: left; max-width: 100%; }
+  .coords { font-size: 10px; letter-spacing: 0.08em; }
+  .coords span { flex-wrap: wrap; gap: 4px 10px; }
+  .section { padding: 72px 0; }
+  .page { padding: 110px 0 64px; }
   .dests, .cards, .grid-2, .account, .admin, .kpis, .stats, .split-copy, footer.site { grid-template-columns: 1fr; }
-  .collect { padding: 72px 0 140px; }
+  .collect { padding: 64px 0 150px; }
+  .collect-route { margin-bottom: 32px; }
+  .collect-sun { width: 88px; height: 88px; margin-left: -44px; bottom: 64px; }
   .stats article,
-  .stats article:not(:first-child) { padding: 24px 0 0; border-right: 0; border-top: 1px solid rgba(42, 34, 24, 0.12); }
+  .stats article:not(:first-child) { padding: 22px 0 0; border-right: 0; border-top: 1px solid rgba(42, 34, 24, 0.12); }
   .stats article:first-child { border-top: 0; padding-top: 0; }
+  .stats article li { flex-wrap: wrap; }
+  .stats article li em { width: 100%; }
   .dest, .card, .dest-photo { min-height: 360px; }
-  .xp-band { padding: 28px 0 16px; }
-  .xp-stage { height: 58vw; }
-  .xp-prev, .xp-next { width: 34vw; height: 34vw; }
-  .xp-main { width: 50vw; height: 50vw; margin-right: -24px; }
-  .xp-panel { min-height: 220px; width: 36vw; padding: 22px 16px; }
-  .xp-panel h2 { font-size: 22px; }
+  .dest-photo h3 { font-size: 36px; }
+  .xp-band { padding: 20px 0 16px; }
+  .xp-stage {
+    display: grid;
+    grid-template-rows: 58vw auto;
+    height: auto;
+  }
+  .xp-prev, .xp-next {
+    top: 29vw;
+    width: 38vw;
+    height: 38vw;
+  }
+  .xp-center {
+    position: relative;
+    grid-row: 1 / 3;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    padding-top: 5vw;
+  }
+  .xp-main { width: 54vw; height: 54vw; margin: 0; }
+  .xp-panel {
+    width: min(92vw, 420px);
+    min-height: 0;
+    padding: 28px 22px 24px;
+    margin-top: -18px;
+  }
+  .xp-panel h2 { font-size: 28px; }
+  .xp-stage.go-next .xp-center { transform: translateX(-10vw) scale(0.96); opacity: 0.4; }
+  .xp-stage.go-prev .xp-center { transform: translateX(10vw) scale(0.96); opacity: 0.4; }
   .xp-foot { justify-content: center; padding: 12px 16px 0; }
   .full-photo .shade { padding: 40px 20px; }
-  .aside { padding-top: 80px; }
+  .prop-hero { min-height: 60vh; padding: 120px 20px 36px; }
+  .aside {
+    padding: 80px 16px 12px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .aside b { width: 100%; }
   .admin-main { padding: 24px 16px 40px; }
   .overlay { padding: 90px 24px; }
+  .overlay a { font-size: clamp(28px, 9vw, 44px); }
+  .book-journey { padding: 108px 0 56px; }
   .book-places,
   .book-rooms,
   .book-dates,
   .book-pay { grid-template-columns: 1fr; }
-  .book-place { min-height: 240px; }
-  .book-sun { display: none; }
+  .book-place { min-height: 220px; }
+  .book-place strong { font-size: 26px; }
+  .book-sun { top: 102px; width: 12px; height: 12px; }
   .book-trail { margin-bottom: 28px; }
+  .book-trail li { font-size: 10px; letter-spacing: 0.08em; }
+  .book-quote { font-size: 22px; }
+  .book-nav { flex-wrap: wrap; }
+  .auth { padding: 28px 20px; }
+  .account { gap: 16px; }
+  table { font-size: 13px; }
+  input, select, textarea { font-size: 16px; }
+}
+
+@media (max-width: 640px) {
+  nav.top .brand { font-size: 14px; max-width: 42vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hero-center { top: 38%; }
+  .hero-base { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .coords em { display: block; }
+  .book-trail li { font-size: 0; line-height: 0; }
+  .book-trail li b { font-size: 13px; line-height: 1.2; margin-bottom: 0; }
+  .book-pane h2 { font-size: clamp(28px, 9vw, 40px); }
+  footer.site { padding: 32px 18px; }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .hero-center { top: 46%; }
+  .hero-rule { margin-top: 14px; }
+  .hero-base { padding-bottom: 12px; }
+  .coords { display: none; }
+}
+
+@media (max-height: 640px) {
+  .hero-note { display: none; }
+}
+
+@media (hover: none) {
+  .dest-photo .dest-more { max-height: 110px; opacity: 1; margin-top: 10px; }
+  .book-place:hover,
+  .book-room:hover,
+  .xp-prev:hover,
+  .xp-next:hover { transform: none; filter: none; }
+  .xp-prev { transform: translate(-50%, -50%); }
+  .xp-next { transform: translate(-50%, -50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

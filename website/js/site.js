@@ -147,7 +147,7 @@ function home() {
         <div class="reveal-up">
           <p class="tag">Our properties</p>
           <h2>Iconic destinations</h2>
-          <p class="muted" style="max-width:640px;margin:12px 0 0">Three properties. Three towns. Hover a place, then open it.</p>
+          <p class="muted" style="max-width:640px;margin:12px 0 0">Three properties. Three towns. Open a place to see its rooms.</p>
         </div>
         <div class="dests reveal-up">${props.map(propertyCard).join("")}</div>
       </div>
@@ -766,11 +766,13 @@ function bind() {
       if (playing) start();
       else clearInterval(window.__hero);
     });
-    hero?.addEventListener("mousemove", (e) => {
-      const x = (e.clientX / innerWidth - 0.5) * 16;
-      const y = (e.clientY / innerHeight - 0.5) * 10;
-      document.querySelector(".hero-slides").style.transform = `translate(${x}px, ${y}px) scale(1.08)`;
-    });
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      hero?.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / innerWidth - 0.5) * 16;
+        const y = (e.clientY / innerHeight - 0.5) * 10;
+        document.querySelector(".hero-slides").style.transform = `translate(${x}px, ${y}px) scale(1.08)`;
+      });
+    }
   }
   const xp = [
     { img: PHOTOS.samara, title: "Lake — Entebbe", copy: "Hotel Samara sits by the water at the start of most Uganda journeys.", href: "#/property/samara", cta: "Hotel Samara", loc: "Entebbe" },
