@@ -2,7 +2,7 @@
 
 Static luxury demo — no backend.
 
-- Cover: `index.html` → **View website**
+- Root `index.html` opens the website (`website/index.html#/home`)
 - Website: `website/index.html`
 - Staff dashboard: `website/admin.html`
 
