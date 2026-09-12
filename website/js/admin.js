@@ -45,11 +45,11 @@ function shell(title, inner) {
     </nav>
     <div class="admin">
       <aside class="aside">
-        <b>Dashboard</b>
+        <b>The desk</b>
         ${links.map(([l, label]) => `<a class="${p === l || p.startsWith(l + "/") ? "on" : ""}" href="#/${l}">${label}</a>`).join("")}
       </aside>
       <main class="admin-main">
-        <p class="kicker">Staff</p>
+        <p class="kicker">Uganda · Staff</p>
         <h2>${title}</h2>
         ${inner}
       </main>
@@ -81,16 +81,27 @@ function overview() {
     const s = Store.session();
     return !(s.role === "admin" && s.propertyId) || p.id === s.propertyId;
   });
+  const photos = { samara: "img/samara.jpg", emburara: "img/emburara.jpg", chimpundu: "img/chimpundu.jpg" };
   return shell("Today", `
+    <p class="muted" style="margin:8px 0 28px">Lake · Highland · Forest — one desk for all three.</p>
     <div class="kpis">
       <div class="kpi"><b>${list.length}</b><span>Reservations</span></div>
       <div class="kpi"><b>${today}</b><span>Active stays</span></div>
       <div class="kpi"><b>${Store.all().tickets.filter((t) => t.status !== "closed").length}</b><span>Open tickets</span></div>
       <div class="kpi"><b>${Store.all().messages.filter((m) => m.unread).length}</b><span>Unread contact</span></div>
     </div>
-    ${scoped.map((p) => `
-      <div class="bar-line"><span>${p.name}</span><div class="track"><div class="fill" style="width:${occ[p.id]}%"></div></div><span>${occ[p.id]}%</span></div>
-    `).join("")}
+    <div class="admin-places">
+      ${scoped.map((p) => `
+        <article class="admin-place">
+          <div class="admin-place-photo" style="background-image:url('${photos[p.id]}')"></div>
+          <div class="admin-place-copy">
+            <small>${p.kind} · ${p.town}</small>
+            <h3>${p.title}</h3>
+            <div class="track"><div class="fill" style="width:${occ[p.id]}%"></div></div>
+            <span>${occ[p.id]}% occupied</span>
+          </div>
+        </article>`).join("")}
+    </div>
     <table style="margin-top:28px">
       <tr><th>ID</th><th>Guest</th><th>Property</th><th>Status</th></tr>
       ${list.slice(0, 6).map((r) => `<tr class="clickable" data-res="${r.id}"><td>${r.id}</td><td>${r.name}</td><td>${Store.property(r.propertyId).name}</td><td class="status">${r.status}</td></tr>`).join("")}

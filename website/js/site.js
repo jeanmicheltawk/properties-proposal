@@ -45,15 +45,17 @@ function nav() {
       <a class="nav-cta book" href="#/booking">Book now</a>
     </nav>
     <div class="overlay" id="menu">
-      <button class="close-menu" type="button" data-menu>Close</button>
-      <a href="#/home" data-menu>Home</a>
-      <a href="#/properties" data-menu>Properties</a>
-      <a href="#/rooms" data-menu>Rooms</a>
-      <a href="#/booking" data-menu>Book</a>
-      <a href="#/contact" data-menu>Enquire</a>
-      <a href="#/support" data-menu>Support</a>
-      ${guest ? `<a href="#/account" data-menu>${s.name.split(" ")[0]}</a>` : `<a href="#/signin" data-menu>Sign in</a>`}
-      <a href="admin.html">Staff</a>
+      <div class="overlay-links">
+        <a href="#/home" data-menu><em>01</em> Home</a>
+        <a href="#/properties" data-menu><em>02</em> Properties</a>
+        <a href="#/rooms" data-menu><em>03</em> Rooms</a>
+        <a href="#/booking" data-menu><em>04</em> Book</a>
+        <a href="#/contact" data-menu><em>05</em> Enquire</a>
+        <a href="#/support" data-menu><em>06</em> Support</a>
+        ${guest ? `<a href="#/account" data-menu><em>07</em> ${s.name.split(" ")[0]}</a>` : `<a href="#/signin" data-menu><em>07</em> Sign in</a>`}
+        <a href="admin.html"><em>08</em> Staff</a>
+      </div>
+      <p class="overlay-note">Hotel Samara · Lodge Emburara · Lodge Chimpundu</p>
     </div>`;
 }
 
@@ -233,12 +235,22 @@ function home() {
     </section>`;
 }
 
+function landHero(kicker, title, sub, photo) {
+  return `
+    <section class="land-hero" style="background-image:url('${photo || PHOTOS.hero[0]}')">
+      <div class="land-veil"></div>
+      <div class="wrap land-hero-in">
+        <p class="kicker">${kicker}</p>
+        <h1>${title}</h1>
+        <p class="land-sub">${sub}</p>
+      </div>
+    </section>`;
+}
+
 function properties() {
   return `
-    <section class="page wrap">
-      <p class="kicker">The collection</p>
-      <h2>Where you can stay.</h2>
-      <p class="lead" style="margin:16px 0 8px">Each property has its own rooms and rates.</p>
+    ${landHero("The collection", "Lake · Highland · Forest", "Three stays. Three towns. Each with its own rooms.", PHOTOS.hero[0])}
+    <section class="section wrap">
       <div class="dests">${Store.all().properties.map(propertyCard).join("")}</div>
     </section>`;
 }
@@ -280,20 +292,23 @@ function roomsPage() {
     .concat(Store.all().properties.map((p) =>
       `<button class="chip ${filter === p.id ? "on" : ""}" data-filter="${p.id}">${p.name}</button>`)).join("");
   return `
-    <section class="page wrap">
-      <p class="kicker">Rooms</p>
-      <h2>Rates in UGX.</h2>
+    ${landHero("Rooms", "A bed on the land.", "Rates in UGX. Each property keeps its own rooms.", PHOTOS.emburara)}
+    <section class="section wrap">
       <div class="chips" id="filters">${chips}</div>
       <div class="grid-2">
         ${rooms.map((r) => {
           const p = Store.property(r.propertyId);
+          const land = PLACE[p.id]?.land || p.kind;
           return `
-            <article class="room">
-              <p class="kicker">${p.title} · ${p.town}</p>
-              <h3>${r.name}</h3>
-              <p class="price">${Store.ugx(r.rate)} <span class="muted">/ night</span></p>
-              <p class="muted">${r.occupancy} guests · ${r.note}</p>
-              <a class="btn btn-solid" style="margin-top:16px" href="#/booking?property=${r.propertyId}&room=${r.id}">Book</a>
+            <article class="room room-card">
+              <div class="room-photo" style="background-image:url('${PHOTOS[p.id]}')"></div>
+              <div class="room-body">
+                <p class="kicker">${land} · ${p.title} · ${p.town}</p>
+                <h3>${r.name}</h3>
+                <p class="price">${Store.ugx(r.rate)} <span class="muted">/ night</span></p>
+                <p class="muted">${r.occupancy} guests · ${r.note}</p>
+                <a class="btn btn-solid" style="margin-top:16px" href="#/booking?property=${r.propertyId}&room=${r.id}">Book</a>
+              </div>
             </article>`;
         }).join("")}
       </div>
@@ -432,11 +447,21 @@ function quote() {
 
 function contactPage() {
   return `
-    <section class="page wrap">
-      <div class="auth">
-        <p class="kicker">Contact</p>
-        <h2>Write to us.</h2>
-        <form id="contact-form" style="margin-top:22px">
+    <section class="land-split">
+      <div class="land-split-photo" style="background-image:url('${PHOTOS.samara}')">
+        <div>
+          <p class="kicker">Enquire</p>
+          <h1>Write to us.</h1>
+          <p class="land-sub">Hotel Samara · Lodge Emburara · Lodge Chimpundu</p>
+          <p class="coords">
+            <span>Entebbe <em>0.0528° N · 32.4637° E</em></span>
+            <span>Mbarara <em>0.6074° S · 30.6545° E</em></span>
+            <span>Kebale <em>1.2486° S · 29.9894° E</em></span>
+          </p>
+        </div>
+      </div>
+      <div class="land-split-form">
+        <form id="contact-form">
           <div class="field"><label>Name</label><input name="name" required></div>
           <div class="field"><label>Email</label><input type="email" name="email" required></div>
           <div class="field"><label>Property</label>
@@ -478,11 +503,16 @@ function supportPage() {
 function authPage(mode) {
   const signup = mode === "signup";
   return `
-    <section class="page wrap">
-      <div class="auth">
-        <p class="kicker">${signup ? "Guest" : "Welcome back"}</p>
-        <h2>${signup ? "Create account" : "Sign in"}</h2>
-        <form id="auth-form" style="margin-top:22px">
+    <section class="land-split">
+      <div class="land-split-photo" style="background-image:url('${PHOTOS.hero[0]}')">
+        <div>
+          <p class="kicker">${signup ? "Guest" : "Welcome back"}</p>
+          <h1>${signup ? "Create account" : "Sign in"}</h1>
+          <p class="land-sub">Your email is the key to your stay.</p>
+        </div>
+      </div>
+      <div class="land-split-form">
+        <form id="auth-form">
           ${signup ? `<div class="field"><label>Full name</label><input name="name" required></div>` : ""}
           <div class="field"><label>Email</label><input type="email" name="email" required></div>
           <div class="field"><label>Password</label><input type="password" name="password" required></div>
@@ -614,9 +644,23 @@ function render() {
 }
 
 function bind() {
+  const setMenu = (open) => {
+    const menu = document.getElementById("menu");
+    const btn = document.querySelector(".menu-btn");
+    if (!menu) return;
+    menu.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+    if (btn) btn.textContent = open ? "Close" : "Menu";
+  };
   document.querySelectorAll("[data-menu]").forEach((el) => {
-    el.addEventListener("click", () => document.getElementById("menu")?.classList.toggle("open"));
+    el.addEventListener("click", () => setMenu(!document.getElementById("menu")?.classList.contains("open")));
   });
+  if (!window.__menuEsc) {
+    window.__menuEsc = true;
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setMenu(false);
+    });
+  }
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => go("rooms" + (btn.dataset.filter ? "?property=" + btn.dataset.filter : "")));
   });
